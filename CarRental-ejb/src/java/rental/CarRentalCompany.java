@@ -8,8 +8,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 
 @Entity
@@ -17,13 +24,21 @@ public class CarRentalCompany {
 
     private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
     
+    @Column
     @Id
     private String name;
     
-   
+    @OneToMany(fetch = FetchType.EAGER, targetEntity = Car.class)
     private List<Car> cars;
+    
+    @ManyToMany
+    @JoinTable(name="crc_cartypes",
+            joinColumns = @JoinColumn(name = "crc_fk"),
+            inverseJoinColumns = @JoinColumn(name = "car_fk"))
     private Set<CarType> carTypes = new HashSet<CarType>();
-	private List<String> regions;
+    
+    @ElementCollection
+    private List<String> regions;
 
 	
     /***************

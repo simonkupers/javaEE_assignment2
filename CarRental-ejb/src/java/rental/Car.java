@@ -19,7 +19,7 @@ public class Car {
     @Column
     private CarType type;
     @Column
-    @OneToMany(fetch = FetchType.EAGER, targetEntity=Reservation.class, mappedBy="event")
+    @OneToMany(fetch = FetchType.EAGER, targetEntity=Reservation.class)
     private Set<Reservation> reservations;
 
     /***************

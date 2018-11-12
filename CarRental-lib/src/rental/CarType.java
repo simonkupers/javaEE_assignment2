@@ -1,18 +1,27 @@
 package rental;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
 public class CarType implements Serializable{
     
+    @Column
     @Id
     private String name;
+    
+    @Column
     private int nbOfSeats;
+    
+    @Column
     private boolean smokingAllowed;
+    
+    @Column
     private double rentalPricePerDay;
     //trunk space in liters
+    @Column
     private float trunkSpace;
     
     /***************
