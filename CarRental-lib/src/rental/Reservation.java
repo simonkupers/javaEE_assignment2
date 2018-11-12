@@ -1,12 +1,30 @@
 package rental;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
 
 
 @Entity
+@Table(name = "RESERVATION")
+@XmlRootElement
 public class Reservation extends Quote {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "id", updatable = false, nullable = false)
+    private int id;
+   
+    @Column(name = "CAR")
     private int carId;
+    
+    
+    
     
     /***************
      * CONSTRUCTOR *
@@ -21,6 +39,14 @@ public class Reservation extends Quote {
     /******
      * ID *
      ******/
+    
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     
     public int getCarId() {
     	return carId;
