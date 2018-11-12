@@ -3,11 +3,23 @@ package rental;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
+
+@Entity
 public class Car {
 
+    @Column
+    @Id
     private int id;
+    @Column
     private CarType type;
+    @Column
+    @OneToMany(fetch = FetchType.EAGER, targetEntity=Reservation.class, mappedBy="event")
     private Set<Reservation> reservations;
 
     /***************
