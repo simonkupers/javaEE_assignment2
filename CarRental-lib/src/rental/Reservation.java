@@ -1,5 +1,9 @@
 package rental;
 
+import javax.persistence.Entity;
+
+
+@Entity
 public class Reservation extends Quote {
 
     private int carId;
