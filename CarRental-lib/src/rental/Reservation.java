@@ -13,6 +13,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "RESERVATION")
 @XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "Reservation.findAll", query = "SELECT r FROM Reservation r")
+    , @NamedQuery(name = "Reservation.findById", query = "SELECT r FROM Reservation r WHERE r.id = :id")
+})
 public class Reservation extends Quote {
 
     @Id
