@@ -85,6 +85,7 @@ public class ManagerSession implements ManagerSessionRemote {
         return out.size();
     }
 
+    @Override
     public void addCarRentalCompany(String datafile) {
         try {
             CrcData data = loadData(datafile);
@@ -98,11 +99,13 @@ public class ManagerSession implements ManagerSessionRemote {
         }
     }
 
+    @Override
     public void addCar(int uid, CarType type) {
         Car car = new Car(uid, type);
         em.persist(car);
     }
 
+    @Override
     public void addCarType(CarType type) {
         em.persist(type);
     }
