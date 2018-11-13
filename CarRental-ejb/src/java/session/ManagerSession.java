@@ -24,7 +24,9 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public Set<CarType> getCarTypes(String company) {
         try {
-            return new HashSet<CarType>((Collection<CarType>) em.createNamedQuery("CarType.findAll"));//RentalStore.getRental(company).getAllTypes());
+            return new HashSet<CarType>((Collection<CarType>) em.createNamedQuery("CarType.findByCompany")
+                .setParameter("company", company)
+                .getResultList());//RentalStore.getRental(company).getAllTypes());
 
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
