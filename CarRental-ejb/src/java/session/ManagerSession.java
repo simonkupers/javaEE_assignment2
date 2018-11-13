@@ -17,16 +17,15 @@ import rental.Reservation;
 @Stateless
 public class ManagerSession implements ManagerSessionRemote {
     
-    protected EntityManager getEntityManager() {
-        return em;
-    }
-    @PersistenceContext(unitName = "distributedApplicationsPU")
+    @PersistenceContext
     private EntityManager em;
+
     
     @Override
     public Set<CarType> getCarTypes(String company) {
         try {
             return new HashSet<CarType>((Collection<CarType>) em.createNamedQuery("CarType.findAll"));//RentalStore.getRental(company).getAllTypes());
+
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -37,7 +36,8 @@ public class ManagerSession implements ManagerSessionRemote {
     public Set<Integer> getCarIds(String company, String type) {
         Set<Integer> out = new HashSet<Integer>();
         try {
-            for(Car c: RentalStore.getRental(company).getCars(type)){
+            CarRentalCompany crc = em.find(CarRentalCompany.class, company);
+            for(Car c: crc.getCars(type)){
                 out.add(c.getId());
             }
         } catch (IllegalArgumentException ex) {
@@ -50,7 +50,8 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public int getNumberOfReservations(String company, String type, int id) {
         try {
-            return RentalStore.getRental(company).getCar(id).getReservations().size();
+            CarRentalCompany crc = em.find(CarRentalCompany.class, company);
+            return crc.getCar(id).getReservations().size();
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
             return 0;
@@ -61,7 +62,8 @@ public class ManagerSession implements ManagerSessionRemote {
     public int getNumberOfReservations(String company, String type) {
         Set<Reservation> out = new HashSet<Reservation>();
         try {
-            for(Car c: RentalStore.getRental(company).getCars(type)){
+           CarRentalCompany crc = em.find(CarRentalCompany.class, company);
+            for(Car c: crc.getCars(type)){
                 out.addAll(c.getReservations());
             }
         } catch (IllegalArgumentException ex) {
