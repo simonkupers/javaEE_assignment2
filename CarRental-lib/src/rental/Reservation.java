@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -21,11 +23,11 @@ public class Reservation extends Quote {
 
     @Id
     @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
     private int id;
    
-    @Column(name = "CAR")
-    private int carId;
+    @ManyToOne
+    private Car car;
     
     
     
@@ -34,10 +36,13 @@ public class Reservation extends Quote {
      * CONSTRUCTOR *
      ***************/
 
-    public Reservation(Quote quote, int carId) {
+    public Reservation() {
+    }
+    
+    public Reservation(Quote quote, Car car) {
     	super(quote.getCarRenter(), quote.getStartDate(), quote.getEndDate(), 
     		quote.getRentalCompany(), quote.getCarType(), quote.getRentalPrice());
-        this.carId = carId;
+        this.car = car;
     }
     
     /******
@@ -53,7 +58,7 @@ public class Reservation extends Quote {
     }
     
     public int getCarId() {
-    	return carId;
+    	return car.getId();
     }
     
     /*************

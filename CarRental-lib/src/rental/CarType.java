@@ -2,19 +2,23 @@ package rental;
 
 import java.io.Serializable;
 import static java.lang.reflect.Array.set;
-import java.util.Set;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
+@Table(name = "TYPES")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "CarType.findAll", query = "SELECT t FROM CarType t")
-    , @NamedQuery(name = "CarType.findByCompany", query = "SELECT c, t  FROM CarType t, Car c WHERE t = c.type WHERE c.company = :company")
+    , @NamedQuery(name = "CarType.findByCompany", query = "SELECT c FROM Car c WHERE c.company = :company")
+
 })
 public class CarType implements Serializable{
     
@@ -33,12 +37,17 @@ public class CarType implements Serializable{
     //trunk space in liters
     @Column
     private float trunkSpace;
-
+    
+    @ManyToMany(mappedBy = "carTypes")
+    private List<CarRentalCompany> carRentalCompanys;
     
     /***************
      * CONSTRUCTOR *
      ***************/
     
+    public CarType() {
+    }
+
     public CarType(String name, int nbOfSeats, float trunkSpace, double rentalPricePerDay, boolean smokingAllowed) {
         this.name = name;
         this.nbOfSeats = nbOfSeats;
