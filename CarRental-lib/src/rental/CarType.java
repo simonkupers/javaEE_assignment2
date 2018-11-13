@@ -1,11 +1,22 @@
 package rental;
 
 import java.io.Serializable;
+import static java.lang.reflect.Array.set;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "CarType.findAll", query = "SELECT t FROM CarType t")
+    , @NamedQuery(name = "CarType.findByCompany", query = "SELECT c FROM Car c WHERE c.company = :company")
+
+})
 public class CarType implements Serializable{
     
     @Column
