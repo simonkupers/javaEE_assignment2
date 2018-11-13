@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.naming.InitialContext;
 import rental.CarType;
 import rental.Reservation;
@@ -14,7 +15,12 @@ import session.ManagerSessionRemote;
 
 public class Main extends AbstractTestManagement<CarRentalSessionRemote, ManagerSessionRemote> {
 
-    private ManagerSessionRemote managerSession;
+    @EJB
+    private static CarRentalSessionRemote carRentalSession;
+
+    @EJB
+    private static ManagerSessionRemote managerSession; 
+    
     
     
     public Main(String scriptFile) {
@@ -46,12 +52,11 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
 
     @Override
     protected CarRentalSessionRemote getNewReservationSession(String name) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return carRentalSession;
     }
 
     @Override
     protected ManagerSessionRemote getNewManagerSession(String name, String carRentalName) throws Exception {
-        managerSession.addCar(0, null);
         return managerSession;
     }
 
@@ -79,4 +84,5 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
     protected int getNumberOfReservationsForCarType(ManagerSessionRemote ms, String carRentalName, String carType) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
 }
