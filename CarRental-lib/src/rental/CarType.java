@@ -14,8 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "CarType.findAll", query = "SELECT t FROM CarType t")
-    , @NamedQuery(name = "CarType.findByCompany", query = "SELECT c FROM Car c WHERE c.company = :company")
-
+    , @NamedQuery(name = "CarType.findByCompany", query = "SELECT c, t  FROM CarType t, Car c WHERE t = c.type WHERE c.company = :company")
 })
 public class CarType implements Serializable{
     
@@ -34,6 +33,7 @@ public class CarType implements Serializable{
     //trunk space in liters
     @Column
     private float trunkSpace;
+
     
     /***************
      * CONSTRUCTOR *
