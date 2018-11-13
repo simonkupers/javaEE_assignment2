@@ -3,6 +3,8 @@ package client;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import rental.CarType;
 import rental.Reservation;
@@ -12,13 +14,19 @@ import session.ManagerSessionRemote;
 
 public class Main extends AbstractTestManagement<CarRentalSessionRemote, ManagerSessionRemote> {
 
+    private ManagerSessionRemote managerSession;
+    
+    
     public Main(String scriptFile) {
         super(scriptFile);
     }
 
     public static void main(String[] args) throws Exception {
-        // TODO: use updated manager interface to load cars into companies
-        new Main("trips").run();
+        Main client = new Main("trips");
+        ManagerSessionRemote managerSession = client.getNewManagerSession("", "");
+        managerSession.addCarRentalCompany("hertz.csv");
+        managerSession.addCarRentalCompany("dockx.csv");
+        client.run();
     }
 
     @Override
@@ -43,7 +51,8 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
 
     @Override
     protected ManagerSessionRemote getNewManagerSession(String name, String carRentalName) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        managerSession.addCar(0, null);
+        return managerSession;
     }
 
     @Override
