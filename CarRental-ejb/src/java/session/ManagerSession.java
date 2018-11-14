@@ -130,7 +130,7 @@ public class ManagerSession implements ManagerSessionRemote {
             CarRentalCompany company = new CarRentalCompany(data.name, data.regions, data.cars);
 
             System.out.println("COMPANY PERSISTS " + company.getName());
-            em.merge(company);
+            em.persist(company);
 //                        List<Car> cars = company.getAllCars();
 //            for(Car car : cars){
 //                car.setCompany(company);
