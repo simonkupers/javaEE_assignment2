@@ -94,7 +94,7 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public CarType getMostPopularCarTypeIn(String companyName, int year) {
         CarRentalCompany crc = (CarRentalCompany) em.createNamedQuery("Company.findById").setParameter("id", companyName).getResultList().get(0);
-        List<Car> cars = em.createNamedQuery("Car.findByCompany").setParameter("company ", crc).getResultList();
+        List<Car> cars = em.createNamedQuery("Car.findByCompany").setParameter("company", crc.getName()).getResultList();
         Map<CarType, Integer> maxMap = new HashMap<CarType, Integer>();
         for (Car car : cars) {
             for (Reservation reservation : car.getReservations()) {

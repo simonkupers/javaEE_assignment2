@@ -121,6 +121,7 @@ public class CarRentalSession implements CarRentalSessionRemote {
         CarType cheapestType = carTypes.get(0);
         for (CarType cartype : carTypes) {
             if (cartype.getRentalPricePerDay() < cheapestType.getRentalPricePerDay()) {
+                System.out.println("CHEPEAEST: " + cartype.getName());
                 cheapestType = cartype;
             }
         }
