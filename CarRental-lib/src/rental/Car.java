@@ -25,7 +25,7 @@ import rental.Reservation;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Car.findAll", query = "SELECT c FROM Car c")
-    , @NamedQuery(name = "Car.findByCompany", query = "SELECT c FROM Car c WHERE c.company = :company"),
+    , @NamedQuery(name = "Car.findByCompany", query = "SELECT c FROM Car c WHERE c.company.name = :company")
 })
 public class Car {
 

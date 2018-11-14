@@ -33,8 +33,8 @@ import rental.ReservationException;
 @Table(name = "COMPANY")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Company.findAll", query = "SELECT c FROM CarRentalCompany  c")
-    , @NamedQuery(name = "Company.findById", query = "SELECT c FROM CarRentalCompany c WHERE c.id = :id")
+    @NamedQuery(name = "Company.findAll", query = "SELECT c FROM CarRentalCompany c")
+    , @NamedQuery(name = "Company.findById", query = "SELECT c FROM CarRentalCompany c WHERE c.name = :id")
 })
 public class CarRentalCompany {
 
