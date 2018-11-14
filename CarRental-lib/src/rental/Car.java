@@ -7,6 +7,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
@@ -17,8 +19,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import rental.CarType;
-import rental.Reservation;
 
 @Entity
 @Table(name = "CAR")
@@ -29,10 +29,12 @@ import rental.Reservation;
 })
 public class Car {
 
-    @Column
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false, nullable = false)
     private int id;
 
+    
     @ManyToOne
     private CarType type;
     
@@ -50,8 +52,7 @@ public class Car {
     public Car() {
     }
 
-    public Car(int uid, CarType type) {
-        this.id = uid;
+    public Car(CarType type) {
         this.type = type;
         this.reservations = new HashSet<Reservation>();
     }

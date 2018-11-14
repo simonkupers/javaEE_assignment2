@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -18,7 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "CarType.findAll", query = "SELECT t FROM CarType t")
-    , @NamedQuery(name = "CarType.findByCompany", query = "SELECT c FROM CarType c WHERE c.carRentalCompanys = :company")
+    , @NamedQuery(name = "CarType.findByCompany", query = "SELECT c FROM CarType c WHERE c.carRentalCompanies = :company")
 
 })
 public class CarType implements Serializable{
@@ -40,7 +41,10 @@ public class CarType implements Serializable{
     private float trunkSpace;
     
     @ManyToMany(mappedBy = "carTypes", cascade = CascadeType.PERSIST)
-    private List<CarRentalCompany> carRentalCompanys;
+    private List<CarRentalCompany> carRentalCompanies;
+    
+    @OneToMany(mappedBy = "type", cascade = CascadeType.PERSIST)
+    private List<Car> cars;
     
     /***************
      * CONSTRUCTOR *

@@ -22,11 +22,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import rental.CarType;
-import rental.Quote;
-import rental.Reservation;
-import rental.ReservationConstraints;
-import rental.ReservationException;
 
 
 
@@ -48,7 +43,7 @@ public class CarRentalCompany {
     @OneToMany(mappedBy = "company", cascade = CascadeType.PERSIST)
     private List<Car> cars;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<CarType> carTypes = new HashSet<CarType>();
 
     @ElementCollection

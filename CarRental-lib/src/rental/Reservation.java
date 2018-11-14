@@ -1,8 +1,10 @@
 package rental;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -23,11 +25,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Reservation extends Quote {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
     private int id;
    
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Car car;
     
     
