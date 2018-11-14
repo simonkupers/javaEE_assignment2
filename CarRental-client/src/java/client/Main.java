@@ -1,5 +1,6 @@
 package client;
 
+import static java.lang.System.out;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +13,7 @@ import rental.Reservation;
 import rental.ReservationConstraints;
 import session.CarRentalSessionRemote;
 import session.ManagerSessionRemote;
+import java.util.logging.Logger;
 
 public class Main extends AbstractTestManagement<CarRentalSessionRemote, ManagerSessionRemote> {
 
@@ -30,8 +32,11 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
     public static void main(String[] args) throws Exception {
         Main client = new Main("trips");
         ManagerSessionRemote managerSession = client.getNewManagerSession("", "");
+        System.out.println("pre herts");
         managerSession.addCarRentalCompany("hertz.csv");
+        System.out.println("pre dockx");
         managerSession.addCarRentalCompany("dockx.csv");
+        System.out.println("apres dockx");
         client.run();
     }
 
