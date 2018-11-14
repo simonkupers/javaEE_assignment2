@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -44,7 +45,7 @@ public class CarRentalCompany {
     @Id
     private String name;
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.PERSIST)
     private List<Car> cars;
 
     @ManyToMany

@@ -3,6 +3,7 @@ package rental;
 import java.io.Serializable;
 import static java.lang.reflect.Array.set;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -38,7 +39,7 @@ public class CarType implements Serializable{
     @Column
     private float trunkSpace;
     
-    @ManyToMany(mappedBy = "carTypes")
+    @ManyToMany(mappedBy = "carTypes", cascade = CascadeType.PERSIST)
     private List<CarRentalCompany> carRentalCompanys;
     
     /***************

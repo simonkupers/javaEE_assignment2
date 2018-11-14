@@ -36,7 +36,7 @@ public class Car {
     @ManyToOne
     private CarType type;
     
-    @OneToMany(mappedBy = "car")
+    @OneToMany(mappedBy = "car", cascade = CascadeType.PERSIST)
     private Set<Reservation> reservations;
 
     @ManyToOne
