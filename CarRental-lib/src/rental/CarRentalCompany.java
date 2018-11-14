@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -21,11 +22,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import rental.CarType;
-import rental.Quote;
-import rental.Reservation;
-import rental.ReservationConstraints;
-import rental.ReservationException;
 
 
 
@@ -44,10 +40,10 @@ public class CarRentalCompany {
     @Id
     private String name;
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.PERSIST)
     private List<Car> cars;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<CarType> carTypes = new HashSet<CarType>();
 
     @ElementCollection

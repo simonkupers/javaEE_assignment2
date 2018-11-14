@@ -17,8 +17,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import rental.CarType;
-import rental.Reservation;
 
 @Entity
 @Table(name = "CAR")
@@ -36,7 +34,7 @@ public class Car {
     @ManyToOne
     private CarType type;
     
-    @OneToMany(mappedBy = "car")
+    @OneToMany(mappedBy = "car",cascade = CascadeType.PERSIST)
     private Set<Reservation> reservations;
 
     @ManyToOne
