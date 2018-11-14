@@ -1,5 +1,7 @@
 package session;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -90,5 +92,24 @@ public class CarRentalSession implements CarRentalSessionRemote {
             throw new IllegalStateException("name already set");
         }
         renter = name;
+    }
+
+    @Override
+    public CarType getCheapestCarType(Date start, Date end, String region) {
+			List<CarRentalCompany> companies = em.createNamedQuery("Company.findAll").getResultList();
+                        List<CarType> carTypes = new ArrayList<>();
+			for(CarRentalCompany crc: companies){
+				if (crc.getRegions().contains(region)) {
+					carTypes.addAll(crc.getAvailableCarTypes(start, end));
+				}
+			}
+                        
+			CarType cheapestType = carTypes.get(0);
+                        for(CarType cartype: carTypes){
+                            if(cartype.getRentalPricePerDay() < cheapestType.getRentalPricePerDay())
+                                cheapestType = cartype;
+                        }
+			return cheapestType;
+
     }
 }

@@ -5,11 +5,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -84,6 +86,43 @@ public class ManagerSession implements ManagerSessionRemote {
         }
         return out.size();
     }
+    
+        @Override
+    public int getNumberOfReservations(String clientName) {
+        return em.createNamedQuery("Reservation.findByRenter").setParameter("renter", clientName).getFirstResult();
+    }
+    
+   @Override
+   public CarType getMostPopularCarTypeIn(String companyName, int year){
+       CarRentalCompany crc = (CarRentalCompany) em.createNamedQuery("Company.findById").setParameter("id", companyName).getResultList().get(0);
+       List<Car> cars = em.createNamedQuery("Car.findByCompany").setParameter("company ", crc).getResultList();
+       Map<CarType,Integer> maxMap = new HashMap<CarType,Integer>();
+		for(Car car:cars){
+			for(Reservation reservation:car.getReservations()){
+				if(reservation.getStartDate().getYear() + 1900 == year)
+					if(maxMap.containsKey(car.getType()))
+						maxMap.put(car.getType(), maxMap.get(car.getType())+1);
+					else
+						maxMap.put(car.getType(), 0);
+				
+			}
+		}
+		if(maxMap.isEmpty()) return null;
+		
+                Map.Entry<CarType, Integer> maxEntry = null;
+
+                for (Map.Entry<CarType, Integer> entry : maxMap.entrySet())
+                    {
+                    if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
+                    {
+                      maxEntry = entry;
+                    }
+                }   
+		return (CarType) maxEntry.getKey();
+       
+   }
+    
+    
 
     @Override
     public void addCarRentalCompany(String datafile) {
@@ -151,11 +190,36 @@ public class ManagerSession implements ManagerSessionRemote {
         return out;
     }
 
+
+
     static class CrcData {
 
         public List<Car> cars = new LinkedList<Car>();
         public String name;
         public List<String> regions = new LinkedList<String>();
+    }
+    
+    public Set<String> getBestClients(){
+        Set<String> clients = new HashSet<String>();
+		Map<String, Integer> reservaties = new HashMap<String,Integer>();
+                List<Reservation> reservations = em.createNamedQuery("Reservation.findAll").getResultList();
+
+				for(Reservation reservation:reservations){
+					
+					if(!reservaties.containsKey(reservation.getCarRenter()))
+						reservaties.put(reservation.getCarRenter(),1);
+					else
+						reservaties.put(reservation.getCarRenter(), reservaties.get(reservation.getCarRenter())+1);
+				}
+			
+
+		int maxValueInMap=(Collections.max(reservaties.values()));  // This will return max value in the Hashmap
+        for (Entry<String, Integer> entry : reservaties.entrySet()) {  // Iterate through hashmap
+            if (entry.getValue()==maxValueInMap) {
+            	clients.add(entry.getKey());
+            }
+        }
+        return clients;
     }
 
 }
