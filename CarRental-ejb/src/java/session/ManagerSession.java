@@ -23,8 +23,6 @@ import javax.persistence.PersistenceContext;
 import rental.Car;
 import rental.CarRentalCompany;
 import rental.CarType;
-import rental.RentalStore;
-import static rental.RentalStore.loadRental;
 import rental.Reservation;
 
 @Stateless
@@ -157,7 +155,7 @@ public class ManagerSession implements ManagerSessionRemote {
         int nextuid = 0;
 
         //open file from jar
-        BufferedReader in = new BufferedReader(new InputStreamReader(RentalStore.class.getClassLoader().getResourceAsStream(datafile)));
+        BufferedReader in = new BufferedReader(new InputStreamReader(ManagerSession.class.getClassLoader().getResourceAsStream(datafile)));
 
         try {
             while (in.ready()) {
