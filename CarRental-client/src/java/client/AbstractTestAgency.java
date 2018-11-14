@@ -9,32 +9,29 @@ import java.util.StringTokenizer;
 import rental.Reservation;
 
 /**
- * 
- * This class supports the following script commands
- * (note that additional commands can be supported by extending this class) :  
- * 
- * BA <from> <until> 
- * Check availability of car types from <from> until <until>
- * 
- * BB <from> <until> <carType>    (command)
- * Create a quote for <client> for a car of type <carType> from <from> until <until>
- * 
- * BF
- * Finalize the quote made for client <client>
- * 
- * BM <type:nr>*
- * Assess total number of reservations comparing it to <type:nr>*
- * 
- * BMR
- * Print all reservations of a client
- * 
- * BS 
- * Create a reservation session  
  *
- * c 
+ * This class supports the following script commands (note that additional
+ * commands can be supported by extending this class) :
+ *
+ * BA <from> <until>
+ * Check availability of car types from <from> until <until>
+ *
+ * BB <from> <until> <carType> (command) Create a quote for <client> for a car
+ * of type <carType> from <from> until <until>
+ *
+ * BF Finalize the quote made for client <client>
+ *
+ * BM <type:nr>* Assess total number of reservations comparing it to <type:nr>*
+ *
+ * BMR Print all reservations of a client
+ *
+ * BS Create a reservation session
+ *
+ * c
  * Modifier to indicate that the according command will fail
  */
 public abstract class AbstractTestAgency<ReservationSession, ManagerSession> extends AbstractTesting {
+
     protected Map<String, ReservationSession> sessions = new HashMap<String, ReservationSession>();
 
     /**
@@ -77,8 +74,7 @@ public abstract class AbstractTestAgency<ReservationSession, ManagerSession> ext
      * @param start start time of the reservation
      * @param end end time of the reservation
      * @param carType type of car to be reserved
-     * @param region region for which the car shall be reserved
-     * should be done
+     * @param region region for which the car shall be reserved should be done
      *
      * @throws Exception if things go wrong, throw exception
      */
@@ -118,91 +114,101 @@ public abstract class AbstractTestAgency<ReservationSession, ManagerSession> ext
      *
      * @throws Exception if things go wrong, throw exception
      */
-    protected abstract int getNumberOfReservationsForCarType(ManagerSession ms, String carRentalName, String carType) throws Exception;    
+    protected abstract int getNumberOfReservationsForCarType(ManagerSession ms, String carRentalName, String carType) throws Exception;
 
     public AbstractTestAgency(String scriptFile) {
         super(scriptFile);
     }
 
-	protected void processLine(String name, String cmd, List<Character> flags, StringTokenizer scriptLineTokens) throws ApplicationException {
-		//
-		// Pre processing command 
-		//
-		Date startDate = null, endDate = null;		
-		if (cmd.equals("BA") || cmd.equals("BB")) {
-			try {
-				startDate = DATE_FORMAT.parse(scriptLineTokens.nextToken());
-				endDate = DATE_FORMAT.parse(scriptLineTokens.nextToken());
-			} catch (ParseException e) {
-				throw new IllegalArgumentException(e);
-			}
-		}
-		
+    protected void processLine(String name, String cmd, List<Character> flags, StringTokenizer scriptLineTokens) throws ApplicationException {
+        //
+        // Pre processing command 
+        //
+        Date startDate = null, endDate = null;
+        if (cmd.equals("BA") || cmd.equals("BB")) {
+            try {
+                startDate = DATE_FORMAT.parse(scriptLineTokens.nextToken());
+                endDate = DATE_FORMAT.parse(scriptLineTokens.nextToken());
+            } catch (ParseException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+
         ReservationSession session = null;
         if (cmd.equals("BA") || cmd.equals("BB") || cmd.equals("BF")) {
-        	session = sessions.get(name);
-	        if (session == null) {
-	            throw new IllegalArgumentException("No session");
-	        }
+            session = sessions.get(name);
+            if (session == null) {
+                throw new IllegalArgumentException("No session");
+            }
         }
-		
-		//
-		// Processing command
-		//
-		if (cmd.equals("BA")) {
-			try {
-				checkForAvailableCarTypes(session, startDate, endDate);
-			} catch (Exception e) { throw new ApplicationException(e); }
-		} else if (cmd.equals("BB")){
+
+        //
+        // Processing command
+        //
+        if (cmd.equals("BA")) {
+            try {
+                checkForAvailableCarTypes(session, startDate, endDate);
+            } catch (Exception e) {
+                throw new ApplicationException(e);
+            }
+        } else if (cmd.equals("BB")) {
             String type = scriptLineTokens.nextToken();
             String region = scriptLineTokens.nextToken();
             try {
                 addQuoteToSession(session, name, startDate, endDate, type, region);
-   			} catch (Exception e) { throw new ApplicationException(e); }
-		} else if (cmd.equals("BF")){
+            } catch (Exception e) {
+                throw new ApplicationException(e);
+            }
+        } else if (cmd.equals("BF")) {
             try {
                 confirmQuotes(session, name);
-   			} catch (Exception e) { throw new ApplicationException(e); }          
-		} else if (cmd.equals("BM")){
-			try {
+            } catch (Exception e) {
+                throw new ApplicationException(e);
+            }
+        } else if (cmd.equals("BM")) {
+            try {
                 assessTotalReservations(name, scriptLineTokens);
-			} catch (Exception e) { throw new ApplicationException(e); }
-		} else if (cmd.equals("BMR")){
-			try {
-				assessTotalReservationsRenter(name,scriptLineTokens);
-			} catch (Exception e) { throw new ApplicationException(e); }
-				
-/*			try{
+            } catch (Exception e) {
+                throw new ApplicationException(e);
+            }
+        } else if (cmd.equals("BMR")) {
+            try {
+                assessTotalReservationsRenter(name, scriptLineTokens);
+            } catch (Exception e) {
+                throw new ApplicationException(e);
+            }
+
+            /*			try{
 				ManagerSession aMgmtSession = getNewManagerSession("CarRent", name);
 	            System.out.println("Number of reservations by " + name + ":\t" + getNumberOfReservationsBy(aMgmtSession, name));
 	            System.out.println();
 			} catch (Exception e) { throw new ApplicationException(e); }
-*/
-		} else if (cmd.equals("BS")) {
+             */
+        } else if (cmd.equals("BS")) {
             try {
-            	sessions.put(name, getNewReservationSession(name));
-			} catch (Exception e) { throw new ApplicationException(e); }
-		} else {
-			throw new IllegalArgumentException("Unknown command");
-		}
-	}
+                sessions.put(name, getNewReservationSession(name));
+            } catch (Exception e) {
+                throw new ApplicationException(e);
+            }
+        } else {
+            throw new IllegalArgumentException("Unknown command");
+        }
+    }
 
     private void assessTotalReservationsRenter(String name, StringTokenizer scriptReader) throws Exception {
-		ManagerSession rental = getNewManagerSession(name, name);
-		
-		while(scriptReader.hasMoreTokens()){
-			String pars = scriptReader.nextToken();
-			
-			int nr = getNumberOfReservationsBy(rental,name);
-			if (Integer.parseInt(pars) == nr) {
-				System.out.println(name + " has correct totals " + pars + " " + nr);
-			} else {
-				System.err.println(name + " has wrong totals " + pars +" " + nr );
-			}
-		}
-	}
+        ManagerSession rental = getNewManagerSession(name, name);
 
-    
+        while (scriptReader.hasMoreTokens()) {
+            String pars = scriptReader.nextToken();
+
+            int nr = getNumberOfReservationsBy(rental, name);
+            if (Integer.parseInt(pars) == nr) {
+                System.out.println(name + " has correct totals " + pars + " " + nr);
+            } else {
+                System.err.println(name + " has wrong totals " + pars + " " + nr);
+            }
+        }
+    }
 
     private void assessTotalReservations(String name, StringTokenizer scriptReader) throws Exception {
         ManagerSession rental = getNewManagerSession(name, name);
