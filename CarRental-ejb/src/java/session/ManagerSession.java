@@ -128,8 +128,13 @@ public class ManagerSession implements ManagerSessionRemote {
         try {
             CrcData data = loadData(datafile);
             CarRentalCompany company = new CarRentalCompany(data.name, data.regions, data.cars);
+
             System.out.println("COMPANY PERSISTS " + company.getName());
             em.merge(company);
+//                        List<Car> cars = company.getAllCars();
+//            for(Car car : cars){
+//                car.setCompany(company);
+//            }
             System.out.println("apres company persist");
             Logger.getLogger(ManagerSession.class.getName()).log(Level.INFO, "Loaded {0} from file {1}", new Object[]{data.name, datafile});
         } catch (NumberFormatException ex) {

@@ -13,14 +13,14 @@ import javax.persistence.PersistenceContext;
 import rental.CarRentalCompany;
 import rental.CarType;
 import rental.Quote;
-import rental.RentalStore;
+//import rental.RentalStore;
 import rental.Reservation;
 import rental.ReservationConstraints;
 import rental.ReservationException;
 
 @Stateful
 public class CarRentalSession implements CarRentalSessionRemote {
-    
+
     @PersistenceContext
     private EntityManager em;
 
@@ -30,38 +30,46 @@ public class CarRentalSession implements CarRentalSessionRemote {
     @Override
     public Set<String> getAllRentalCompanies() {
         List<CarRentalCompany> companies = em.createQuery("Select a from CarRentalCompany a", CarRentalCompany.class)
-                                           .getResultList();
+                .getResultList();
         Set<String> companyNames = new HashSet<String>();
-        for(CarRentalCompany crc: companies){
+        for (CarRentalCompany crc : companies) {
             companyNames.add(crc.getName());
         }
         return companyNames;
     }
-    
+
     @Override
     public List<CarType> getAvailableCarTypes(Date start, Date end) {
         List<CarType> availableCarTypes = new LinkedList<CarType>();
         List<CarRentalCompany> crcs = em.createQuery("Select a from CarRentalCompany a", CarRentalCompany.class)
-                                           .getResultList();
-        for(CarRentalCompany crc : crcs) {
-            for(CarType ct : crc.getAvailableCarTypes(start, end)) {
-                if(!availableCarTypes.contains(ct))
+                .getResultList();
+        for (CarRentalCompany crc : crcs) {
+            for (CarType ct : crc.getAvailableCarTypes(start, end)) {
+                if (!availableCarTypes.contains(ct)) {
                     availableCarTypes.add(ct);
+                }
             }
         }
         return availableCarTypes;
     }
 
     @Override
-    public Quote createQuote(String company, ReservationConstraints constraints) throws ReservationException {
+    public Quote createQuote(String name, ReservationConstraints constraints) throws ReservationException {
         try {
-            CarRentalCompany crc = em.find(CarRentalCompany.class, company);
-            Quote out = crc.createQuote(constraints, renter);
-            quotes.add(out);
-            return out;
-        } catch(Exception e) {
-            throw new ReservationException(e);
+            List<CarRentalCompany> crcs = em.createNamedQuery("Company.findAll").getResultList();
+            System.out.print("Companies: " + crcs.toString());
+            for (CarRentalCompany crc : crcs) {
+                System.out.print("Company: " + crc.getName());
+                Quote out = crc.createQuote(constraints, name);
+                quotes.add(out);
+                System.out.print(out.getCarRenter() + "has created a quote");
+                return out;
+            }
+
+        } catch (Exception e) {
+
         }
+        throw new ReservationException("NO CARS AVAILABLE");
     }
 
     @Override
@@ -72,15 +80,16 @@ public class CarRentalSession implements CarRentalSessionRemote {
     @Override
     public List<Reservation> confirmQuotes() throws ReservationException {
         List<Reservation> done = new LinkedList<Reservation>();
-        
+
         try {
             for (Quote quote : quotes) {
                 CarRentalCompany crc = em.find(CarRentalCompany.class, quote.getRentalCompany());
                 done.add(crc.confirmQuote(quote));
             }
         } catch (Exception e) {
-            for(Reservation r:done)
-                RentalStore.getRental(r.getRentalCompany()).cancelReservation(r);
+            for (Reservation r : done) {
+                ((CarRentalCompany) em.createNamedQuery("Company.findById").setParameter("id", r.getRentalCompany()).getSingleResult()).cancelReservation(r);
+            }
             throw new ReservationException(e);
         }
         return done;
@@ -96,20 +105,21 @@ public class CarRentalSession implements CarRentalSessionRemote {
 
     @Override
     public CarType getCheapestCarType(Date start, Date end, String region) {
-			List<CarRentalCompany> companies = em.createNamedQuery("Company.findAll").getResultList();
-                        List<CarType> carTypes = new ArrayList<>();
-			for(CarRentalCompany crc: companies){
-				if (crc.getRegions().contains(region)) {
-					carTypes.addAll(crc.getAvailableCarTypes(start, end));
-				}
-			}
-                        
-			CarType cheapestType = carTypes.get(0);
-                        for(CarType cartype: carTypes){
-                            if(cartype.getRentalPricePerDay() < cheapestType.getRentalPricePerDay())
-                                cheapestType = cartype;
-                        }
-			return cheapestType;
+        List<CarRentalCompany> companies = em.createNamedQuery("Company.findAll").getResultList();
+        List<CarType> carTypes = new ArrayList<>();
+        for (CarRentalCompany crc : companies) {
+            if (crc.getRegions().contains(region)) {
+                carTypes.addAll(crc.getAvailableCarTypes(start, end));
+            }
+        }
+
+        CarType cheapestType = carTypes.get(0);
+        for (CarType cartype : carTypes) {
+            if (cartype.getRentalPricePerDay() < cheapestType.getRentalPricePerDay()) {
+                cheapestType = cartype;
+            }
+        }
+        return cheapestType;
 
     }
 }
