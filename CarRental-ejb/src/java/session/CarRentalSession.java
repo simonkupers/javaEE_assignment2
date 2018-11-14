@@ -55,20 +55,25 @@ public class CarRentalSession implements CarRentalSessionRemote {
 
     @Override
     public Quote createQuote(String name, ReservationConstraints constraints) throws ReservationException {
-        try {
+        
             List<CarRentalCompany> crcs = em.createNamedQuery("Company.findAll").getResultList();
             System.out.print("Companies: " + crcs.toString());
             for (CarRentalCompany crc : crcs) {
                 System.out.print("Company: " + crc.getName());
+               
+                try {
                 Quote out = crc.createQuote(constraints, name);
                 quotes.add(out);
                 System.out.print(out.getCarRenter() + "has created a quote");
                 return out;
+                } catch (Exception e) {
+                    continue;
+                }
+                
+                
             }
 
-        } catch (Exception e) {
-
-        }
+        
         throw new ReservationException("NO CARS AVAILABLE");
     }
 
