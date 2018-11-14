@@ -27,9 +27,15 @@ import rental.Reservation;
 import rental.ReservationConstraints;
 import rental.ReservationException;
 
+
+
 @Entity
 @Table(name = "COMPANY")
 @XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "Company.findAll", query = "SELECT c FROM CarRentalCompany  c")
+    , @NamedQuery(name = "Company.findById", query = "SELECT c FROM CarRentalCompany c WHERE c.id = :id")
+})
 public class CarRentalCompany {
 
     private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
