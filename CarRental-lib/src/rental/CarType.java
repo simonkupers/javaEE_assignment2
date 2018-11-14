@@ -6,6 +6,9 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
@@ -24,8 +27,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 })
 public class CarType implements Serializable{
     
+    
+     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false, nullable = false)
+    private int id;
+    
     @Column
-    @Id
     private String name;
     
     @Column
@@ -40,7 +48,7 @@ public class CarType implements Serializable{
     @Column
     private float trunkSpace;
     
-    @ManyToMany(mappedBy = "carTypes", cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "carTypes", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<CarRentalCompany> carRentalCompanies;
     
     @OneToMany(mappedBy = "type", cascade = CascadeType.PERSIST)
