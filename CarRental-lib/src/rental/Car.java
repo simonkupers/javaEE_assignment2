@@ -1,5 +1,6 @@
 package rental;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,10 +28,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Car.findAll", query = "SELECT c FROM Car c")
     , @NamedQuery(name = "Car.findByCompany", query = "SELECT c FROM Car c WHERE c.company.name = :company")
 })
-public class Car {
+public class Car implements Serializable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(updatable = false, nullable = false)
     private int id;
 

@@ -1,5 +1,6 @@
 package rental;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -32,7 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Company.findAll", query = "SELECT c FROM CarRentalCompany c")
     , @NamedQuery(name = "Company.findById", query = "SELECT c FROM CarRentalCompany c WHERE c.name = :id")
 })
-public class CarRentalCompany {
+public class CarRentalCompany implements Serializable{
 
     private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
 
