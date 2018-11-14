@@ -41,6 +41,7 @@ public class Car {
     @OneToMany(mappedBy = "car", cascade = CascadeType.PERSIST)
     private Set<Reservation> reservations;
 
+    
     @ManyToOne
     private CarRentalCompany company;
 

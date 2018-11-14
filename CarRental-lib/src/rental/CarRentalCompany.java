@@ -40,6 +40,7 @@ public class CarRentalCompany {
     @Id
     private String name;
 
+    
     @OneToMany(mappedBy = "company", cascade = CascadeType.PERSIST)
     private List<Car> cars;
 
@@ -64,6 +65,7 @@ public class CarRentalCompany {
         setRegions(regions);
         for (Car car : cars) {
             carTypes.add(car.getType());
+            car.setCompany(this);
         }
     }
 
@@ -150,6 +152,10 @@ public class CarRentalCompany {
         return out;
     }
 
+    public List<Car> getAllCars() {
+        return cars;
+    }
+    
     public Set<Car> getCars(String type) {
         Set<Car> out = new HashSet<Car>();
         for (Car car : cars) {
