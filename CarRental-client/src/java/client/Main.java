@@ -15,11 +15,7 @@ import session.ManagerSessionRemote;
 
 public class Main extends AbstractTestManagement<CarRentalSessionRemote, ManagerSessionRemote> {
 
-    @EJB
-    private static CarRentalSessionRemote carRentalSession;
 
-    @EJB
-    private static ManagerSessionRemote managerSession; 
     
     
     
@@ -52,12 +48,12 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
 
     @Override
     protected CarRentalSessionRemote getNewReservationSession(String name) throws Exception {
-        return carRentalSession;
+        return (CarRentalSessionRemote) new InitialContext().lookup(CarRentalSessionRemote.class.getName());
     }
 
     @Override
     protected ManagerSessionRemote getNewManagerSession(String name, String carRentalName) throws Exception {
-        return managerSession;
+        return (ManagerSessionRemote) new InitialContext().lookup(ManagerSessionRemote.class.getName());
     }
 
     @Override
