@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "CarType.findAll", query = "SELECT t FROM CarType t")
     , @NamedQuery(name = "CarType.findByCompany", query = "SELECT c FROM CarType c WHERE c.carRentalCompanies = :company")
+    , @NamedQuery(name = "CarType.getCheapest", query = "SELECT c FROM CarType c ORDER BY c.rentalPricePerDay DESC")
 
 })
 public class CarType implements Serializable{
