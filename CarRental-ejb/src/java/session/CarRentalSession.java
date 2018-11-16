@@ -110,7 +110,8 @@ public class CarRentalSession implements CarRentalSessionRemote {
 
     @Override
     public CarType getCheapestCarType(Date start, Date end, String region) {
-        List<CarRentalCompany> companies = em.createNamedQuery("Company.findAll").getResultList();
+        List<CarRentalCompany> companies = em.createNamedQuery("Company.findAll").getResultList();     
+        
         List<CarType> carTypes = new ArrayList<>();
         for (CarRentalCompany crc : companies) {
             if (crc.getRegions().contains(region)) {
@@ -125,7 +126,7 @@ public class CarRentalSession implements CarRentalSessionRemote {
                 cheapestType = cartype;
             }
         }
-        return cheapestType;
+        return carTypes.get(0);
 
     }
 }

@@ -131,10 +131,6 @@ public class ManagerSession implements ManagerSessionRemote {
 
             System.out.println("COMPANY PERSISTS " + company.getName());
             em.persist(company);
-//                        List<Car> cars = company.getAllCars();
-//            for(Car car : cars){
-//                car.setCompany(company);
-//            }
             System.out.println("apres company persist");
             Logger.getLogger(ManagerSession.class.getName()).log(Level.INFO, "Loaded {0} from file {1}", new Object[]{data.name, datafile});
         } catch (NumberFormatException ex) {
@@ -206,22 +202,33 @@ public class ManagerSession implements ManagerSessionRemote {
         Set<String> clients = new HashSet<String>();
         Map<String, Integer> reservaties = new HashMap<String, Integer>();
         List<Reservation> reservations = em.createNamedQuery("Reservation.findAll").getResultList();
+        List<Object[]> renters = em.createNamedQuery("Reservation.countRenter").getResultList();
 
-        for (Reservation reservation : reservations) {
-
-            if (!reservaties.containsKey(reservation.getCarRenter())) {
-                reservaties.put(reservation.getCarRenter(), 1);
-            } else {
-                reservaties.put(reservation.getCarRenter(), reservaties.get(reservation.getCarRenter()) + 1);
+        int max = ((Number) renters.get(0)[1]).intValue();
+        for (Object[] renter : renters) {
+            String name = (String) renter[0];
+            int count = ((Number) renter[1]).intValue();
+            if (count == max) {
+                clients.add(name);
             }
+            System.out.print("name = " + name + "; count = " + count);
         }
 
-        int maxValueInMap = (Collections.max(reservaties.values()));  // This will return max value in the Hashmap
-        for (Entry<String, Integer> entry : reservaties.entrySet()) {  // Iterate through hashmap
-            if (entry.getValue() == maxValueInMap) {
-                clients.add(entry.getKey());
-            }
-        }
+//        for (Reservation reservation : reservations) {
+//
+//            if (!reservaties.containsKey(reservation.getCarRenter())) {
+//                reservaties.put(reservation.getCarRenter(), 1);
+//            } else {
+//                reservaties.put(reservation.getCarRenter(), reservaties.get(reservation.getCarRenter()) + 1);
+//            }
+//        }
+//
+//        int maxValueInMap = (Collections.max(reservaties.values()));  // This will return max value in the Hashmap
+//        for (Entry<String, Integer> entry : reservaties.entrySet()) {  // Iterate through hashmap
+//            if (entry.getValue() == maxValueInMap) {
+//                clients.add(entry.getKey());
+//            }
+//        }
         return clients;
     }
 
